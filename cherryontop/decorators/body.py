@@ -72,14 +72,13 @@ def _check_validator(test):
 
 def _deserialize_request_body():
     body = cherrypy.request.body.read()
-    if not body:
-        return {}
-
-    try:
-        body = ujson.loads(body)
-    except ValueError:
-        raise PayloadError('Invalid JSON')
-
+    if body:
+        try:
+            body = ujson.loads(body)
+        except ValueError:
+            raise PayloadError('Invalid JSON')
+    else:
+        body = cherrypy.request.body.params  # will be {} if empty
     return body
 
 
